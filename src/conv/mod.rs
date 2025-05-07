@@ -1,7 +1,5 @@
-//! Provides convolution operations for `ndarray` arrays.
+//! Provides convolution operations for [`ndarray`] arrays.
 //! Includes standard convolution and related utilities.
-
-use std::fmt::Debug;
 
 use ndarray::{
     Array, ArrayBase, ArrayView, Data, Dim, Dimension, IntoDimension, Ix, RawData, RemoveAxis,
@@ -67,9 +65,9 @@ impl<const N: usize> ConvMode<N> {
     }
 }
 
-/// Extends `ndarray`'s `ArrayBase` with convolution operations.
+/// Extends [`ndarray`]'s [`ndarray::ArrayBase`] with convolution operations.
 ///
-/// This trait adds the `conv` method to `ArrayBase`, enabling
+/// This trait adds the [`ConvExt::conv`] method to [`ndarray::ArrayBase`], enabling
 /// standard convolution operations on N-dimensional arrays.
 ///
 /// # Type Parameters

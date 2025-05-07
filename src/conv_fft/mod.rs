@@ -1,9 +1,9 @@
 //! Provides FFT-accelerated convolution operations.
 //!
-//! This module offers the `ConvFFTExt` trait, which extends `ndarray`
+//! This module offers the [`ConvFFTExt`] trait, which extends [`ndarray`]
 //! with FFT-based convolution methods.
 
-use std::{fmt::Debug, marker::PhantomData};
+use std::marker::PhantomData;
 
 use ndarray::{
     Array, ArrayBase, Data, Dim, IntoDimension, Ix, RawData, RemoveAxis, SliceArg, SliceInfo,
@@ -28,7 +28,7 @@ pub use fft::Processor;
 /// convolutions with the same kernel and settings.
 pub struct Baked<T, SK, const N: usize>
 where
-    T: NumAssign + Debug + FftNum,
+    T: NumAssign + FftNum,
     SK: RawData,
 {
     fft_size: [usize; N],
@@ -42,7 +42,7 @@ where
     _sk_hint: PhantomData<SK>,
 }
 
-/// Extends `ndarray`'s `ArrayBase` with FFT-accelerated convolution operations.
+/// Extends [`ndarray`]'s [`ndarray::ArrayBase`] with FFT-accelerated convolution operations.
 ///
 /// This trait adds the `conv_fft` and `conv_fft_with_processor` methods to `ArrayBase`,
 /// enabling efficient FFT-based convolutions on N-dimensional arrays.
