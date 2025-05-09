@@ -27,7 +27,7 @@ fn tch_conv2d() {
     let kernel = array![[1, 1, 1], [1, 1, 1]];
 
     let res = arr
-        .conv(kernel.with_dilation(2), ConvMode::Same, PaddingMode::Zeros)
+        .xcorr(kernel.with_dilation(2), ConvMode::Same, PaddingMode::Zeros)
         .unwrap();
     dbg!(res);
 }
@@ -39,7 +39,7 @@ fn test_conv() {
     let kernel = array![[1, 1], [1, 1]];
 
     let res = arr
-        .conv(
+        .xcorr(
             &kernel,
             ConvMode::Custom {
                 padding: [1, 2],
@@ -55,7 +55,7 @@ fn test_conv() {
     let kernel = array![[1, 1], [1, 1]];
 
     let res = arr
-        .conv(&kernel, ConvMode::Full, PaddingMode::Zeros)
+        .xcorr(&kernel, ConvMode::Full, PaddingMode::Zeros)
         .unwrap();
     assert_eq!(res, array![[1, 3, 2], [4, 10, 6], [3, 7, 4]]);
     dbg!(res);
@@ -64,7 +64,7 @@ fn test_conv() {
     let kernel = array![1, 1, 1];
 
     let res = arr
-        .conv(
+        .xcorr(
             &kernel,
             ConvMode::Custom {
                 padding: [4],
@@ -80,7 +80,7 @@ fn test_conv() {
     let kernel = array![1, 1, 1];
 
     let res = arr
-        .conv(
+        .xcorr(
             kernel.with_dilation(2),
             ConvMode::Custom {
                 padding: [4],
@@ -110,7 +110,7 @@ fn aligned_with_libtorch() {
     let kernel = array![1, 1, 1];
 
     let res = arr
-        .conv(
+        .xcorr(
             kernel.with_dilation(2),
             ConvMode::Custom {
                 padding: [4],
@@ -138,7 +138,7 @@ fn aligned_with_libtorch() {
     let kernel = array![[1, 1, 1], [1, 1, 1,], [1, 1, 1]];
 
     let res = arr
-        .conv(kernel.with_dilation(2), ConvMode::Same, PaddingMode::Zeros)
+        .xcorr(kernel.with_dilation(2), ConvMode::Same, PaddingMode::Zeros)
         .unwrap();
     assert_eq!(res, array![[4, 2, 4], [2, 1, 2], [4, 2, 4]]);
     dbg!(res);
@@ -159,7 +159,7 @@ fn aligned_with_libtorch() {
     let kernel = array![[1, 1, 1], [1, 1, 1]];
 
     let res = arr
-        .conv(kernel.with_dilation(2), ConvMode::Same, PaddingMode::Zeros)
+        .xcorr(kernel.with_dilation(2), ConvMode::Same, PaddingMode::Zeros)
         .unwrap();
     assert_eq!(res, array![[2, 1, 2], [4, 2, 4], [2, 1, 2]]);
     dbg!(res);
@@ -186,7 +186,7 @@ fn aligned_with_libtorch() {
     ];
 
     let res = arr
-        .conv(
+        .xcorr(
             kernel.with_dilation(2),
             ConvMode::Custom {
                 padding: [2, 2, 2],

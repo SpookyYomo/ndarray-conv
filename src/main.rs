@@ -22,10 +22,10 @@ fn main() {
 
             let now = Instant::now();
             let a = x
-                .conv(k.with_dilation(2), ConvMode::Same, PaddingMode::Zeros)
+                .xcorr(k.with_dilation(2), ConvMode::Same, PaddingMode::Zeros)
                 .unwrap();
             let b = x
-                .conv_fft(k.with_dilation(2), ConvMode::Same, PaddingMode::Zeros)
+                .xcorr_fft(k.with_dilation(2), ConvMode::Same, PaddingMode::Zeros)
                 .unwrap();
 
             // dbg!(a.shape(), b.shape());

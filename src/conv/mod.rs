@@ -67,7 +67,7 @@ impl<const N: usize> ConvMode<N> {
 
 /// Extends [`ndarray`]'s [`ndarray::ArrayBase`] with convolution operations.
 ///
-/// This trait adds the [`ConvExt::conv`] method to [`ndarray::ArrayBase`], enabling
+/// This trait adds the [`ConvExt::xcorr`] method to [`ndarray::ArrayBase`], enabling
 /// standard convolution operations on N-dimensional arrays.
 ///
 /// # Type Parameters
@@ -81,7 +81,7 @@ where
     S: RawData,
     SK: RawData,
 {
-    /// Performs a standard convolution operation.
+    /// Performs a standard cross-correlation operation.
     ///
     /// This method convolves the input array with a given kernel,
     /// using the specified convolution mode and padding.
@@ -94,7 +94,7 @@ where
     ///
     /// # Returns
     ///
-    fn conv(
+    fn xcorr(
         &self,
         kernel: impl IntoKernelWithDilation<'a, SK, N>,
         conv_mode: ConvMode<N>,
@@ -112,7 +112,7 @@ where
     SliceInfo<[SliceInfoElem; N], Dim<[Ix; N]>, Dim<[Ix; N]>>:
         SliceArg<Dim<[Ix; N]>, OutDim = Dim<[Ix; N]>>,
 {
-    fn conv(
+    fn xcorr(
         &self,
         kernel: impl IntoKernelWithDilation<'a, SK, N>,
         conv_mode: ConvMode<N>,

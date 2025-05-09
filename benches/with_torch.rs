@@ -40,13 +40,13 @@ fn criterion_benchmark(c: &mut Criterion) {
 
     /// Benchmark for 1D convolution using `conv_fft`.
     c.bench_function("fft_1d", |b| {
-        b.iter(|| x.conv_fft(&k, ConvMode::Same, PaddingMode::Zeros))
+        b.iter(|| x.xcorr_fft(&k, ConvMode::Same, PaddingMode::Zeros))
     });
 
     /// Benchmark for 1D convolution using `conv_fft_with_processor`.
     c.bench_function("fft_with_processor_1d", |b| {
         b.iter(|| {
-            x.conv_fft_with_processor(&k, ConvMode::Same, PaddingMode::Zeros, &mut fft_processor)
+            x.xcorr_fft_with_processor(&k, ConvMode::Same, PaddingMode::Zeros, &mut fft_processor)
         })
     });
 
@@ -90,13 +90,13 @@ fn criterion_benchmark(c: &mut Criterion) {
 
     /// Benchmark for 2D convolution using `conv_fft`.
     c.bench_function("fft_2d", |b| {
-        b.iter(|| x.conv_fft(&k, ConvMode::Same, PaddingMode::Zeros))
+        b.iter(|| x.xcorr_fft(&k, ConvMode::Same, PaddingMode::Zeros))
     });
 
     /// Benchmark for 2D convolution using `conv_fft_with_processor`.
     c.bench_function("fft_with_processor_2d", |b| {
         b.iter(|| {
-            x.conv_fft_with_processor(&k, ConvMode::Same, PaddingMode::Zeros, &mut fft_processor)
+            x.xcorr_fft_with_processor(&k, ConvMode::Same, PaddingMode::Zeros, &mut fft_processor)
         })
     });
 
@@ -141,13 +141,13 @@ fn criterion_benchmark(c: &mut Criterion) {
 
     /// Benchmark for 3D convolution using `conv_fft`.
     c.bench_function("fft_3d", |b| {
-        b.iter(|| x.conv_fft(&k, ConvMode::Same, PaddingMode::Zeros))
+        b.iter(|| x.xcorr_fft(&k, ConvMode::Same, PaddingMode::Zeros))
     });
 
     /// Benchmark for 3D convolution using `conv_fft_with_processor`.
     c.bench_function("fft_with_processor_3d", |b| {
         b.iter(|| {
-            x.conv_fft_with_processor(&k, ConvMode::Same, PaddingMode::Zeros, &mut fft_processor)
+            x.xcorr_fft_with_processor(&k, ConvMode::Same, PaddingMode::Zeros, &mut fft_processor)
         })
     });
 

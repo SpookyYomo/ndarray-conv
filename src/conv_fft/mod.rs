@@ -55,10 +55,10 @@ where
 ///
 /// # Methods
 ///
-/// *   `conv_fft`: Performs an FFT-accelerated convolution with default settings.
-/// *   `conv_fft_with_processor`: Performs an FFT-accelerated convolution using a provided `Processor` instance, allowing for reuse of FFT plans and scratch space.
-/// *   `conv_fft_bake`: Precomputes and stores necessary data for performing repeated convolutions in the form of `Baked`.
-/// *   `conv_fft_with_baked`: Performs a convolution with the provided `Baked` data.
+/// *   `xcorr_fft`: Performs an FFT-accelerated convolution with default settings.
+/// *   `xcorr_fft_with_processor`: Performs an FFT-accelerated convolution using a provided `Processor` instance, allowing for reuse of FFT plans and scratch space.
+/// *   `xcorr_fft_bake`: Precomputes and stores necessary data for performing repeated convolutions in the form of `Baked`.
+/// *   `xcorr_fft_with_baked`: Performs a convolution with the provided `Baked` data.
 ///
 /// # Example
 ///
@@ -68,7 +68,7 @@ where
 ///
 /// let arr = array![[1., 2.], [3., 4.]];
 /// let kernel = array![[1., 0.], [0., 1.]];
-/// let result = arr.conv_fft(&kernel, ConvMode::Same, PaddingMode::Zeros).unwrap();
+/// let result = arr.xcorr_fft(&kernel, ConvMode::Same, PaddingMode::Zeros).unwrap();
 /// ```
 ///
 /// # Notes
@@ -80,14 +80,14 @@ where
     S: RawData,
     SK: RawData,
 {
-    fn conv_fft(
+    fn xcorr_fft(
         &self,
         kernel: impl IntoKernelWithDilation<'a, SK, N>,
         conv_mode: ConvMode<N>,
         padding_mode: PaddingMode<N, T>,
     ) -> Result<Array<T, Dim<[Ix; N]>>, crate::Error<N>>;
 
-    fn conv_fft_with_processor(
+    fn xcorr_fft_with_processor(
         &self,
         kernel: impl IntoKernelWithDilation<'a, SK, N>,
         conv_mode: ConvMode<N>,
@@ -203,17 +203,17 @@ where
     //     })
     // }
 
-    fn conv_fft(
+    fn xcorr_fft(
         &self,
         kernel: impl IntoKernelWithDilation<'a, SK, N>,
         conv_mode: ConvMode<N>,
         padding_mode: PaddingMode<N, T>,
     ) -> Result<Array<T, Dim<[Ix; N]>>, crate::Error<N>> {
         let mut p = Processor::default();
-        self.conv_fft_with_processor(kernel, conv_mode, padding_mode, &mut p)
+        self.xcorr_fft_with_processor(kernel, conv_mode, padding_mode, &mut p)
     }
 
-    fn conv_fft_with_processor(
+    fn xcorr_fft_with_processor(
         &self,
         kernel: impl IntoKernelWithDilation<'a, SK, N>,
         conv_mode: ConvMode<N>,
@@ -288,14 +288,14 @@ mod tests {
         let kernel = array![[1, 0], [3, 1]];
 
         let res_normal = arr
-            .conv(&kernel, ConvMode::Same, PaddingMode::Replicate)
+            .xcorr(&kernel, ConvMode::Same, PaddingMode::Replicate)
             .unwrap();
         // dbg!(res_normal);
 
         let res_fft = arr
             .map(|&x| x as f64)
             // The padding does not matter here, it is only used to calculate the correct size
-            .conv_fft(
+            .xcorr_fft(
                 &kernel.map(|&x| x as f64),
                 ConvMode::Same,
                 PaddingMode::Replicate,
@@ -316,13 +316,13 @@ mod tests {
         ];
 
         let res_normal = arr
-            .conv(&kernel, ConvMode::Same, PaddingMode::Zeros)
+            .xcorr(&kernel, ConvMode::Same, PaddingMode::Zeros)
             .unwrap();
         // dbg!(res_normal);
 
         let res_fft = arr
             .map(|&x| x as f32)
-            .conv_fft(
+            .xcorr_fft(
                 &kernel.map(|&x| x as f32),
                 ConvMode::Same,
                 PaddingMode::Zeros,
@@ -339,7 +339,7 @@ mod tests {
         let kernel = array![[1, 0], [3, 1]];
 
         let res_normal = arr
-            .conv(
+            .xcorr(
                 kernel.with_dilation(2),
                 ConvMode::Custom {
                     padding: [3, 3],
@@ -352,7 +352,7 @@ mod tests {
 
         let res_fft = arr
             .map(|&x| x as f64)
-            .conv_fft(
+            .xcorr_fft(
                 kernel.map(|&x| x as f64).with_dilation(2),
                 ConvMode::Custom {
                     padding: [3, 3],
@@ -372,13 +372,13 @@ mod tests {
         let kernel = array![1, 1, 1, 1];
 
         let res_normal = arr
-            .conv(kernel.with_dilation(2), ConvMode::Same, PaddingMode::Zeros)
+            .xcorr(kernel.with_dilation(2), ConvMode::Same, PaddingMode::Zeros)
             .unwrap();
         // dbg!(&res_normal);
 
         let res_fft = arr
             .map(|&x| x as f32)
-            .conv_fft(
+            .xcorr_fft(
                 kernel.map(|&x| x as f32).with_dilation(2),
                 ConvMode::Same,
                 PaddingMode::Zeros,
@@ -399,11 +399,11 @@ mod tests {
             array![0.0, 0.1, 0.3, 0.4, 0.0, 0.1, 0.3, 0.4, 0.0, 0.1, 0.3, 0.4, 0.0, 0.1, 0.3, 0.4];
         let kernel: Array1<f32> = array![0.1, 0.3, 0.6, 0.3, 0.1];
 
-        arr.conv(&kernel, crate::ConvMode::Same, crate::PaddingMode::Circular)
+        arr.xcorr(&kernel, crate::ConvMode::Same, crate::PaddingMode::Circular)
             .unwrap()
             .iter()
             .zip(
-                arr.conv_fft(&kernel, crate::ConvMode::Same, crate::PaddingMode::Circular)
+                arr.xcorr_fft(&kernel, crate::ConvMode::Same, crate::PaddingMode::Circular)
                     .unwrap(),
             )
             .for_each(|(a, b)| assert!((a - b).abs() < 1e-6));

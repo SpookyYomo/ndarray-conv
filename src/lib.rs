@@ -10,9 +10,9 @@
 //! 1. **Input Arrays:** Use `ndarray`'s [`Array`](https://docs.rs/ndarray/latest/ndarray/type.Array.html)
 //!    or [`ArrayView`](https://docs.rs/ndarray/latest/ndarray/type.ArrayView.html)
 //!    as your input data and convolution kernel.
-//! 2. **Convolution Methods:** Call `array.conv(...)` or `array.conv_fft(...)`.
+//! 2. **Convolution Methods:** Call `array.xcorr(...)` or `array.xcorr_fft(...)`.
 //!    These methods are added to `ArrayBase` types via the traits
-//!    [`ConvExt::conv`] and [`ConvFFTExt::conv_fft`].
+//!    [`ConvExt::xcorr`] and [`ConvFFTExt::xcorr_fft`].
 //! 3. **Convolution Mode:** [`ConvMode`] specifies the size of the output.
 //! 4. **Padding Mode:** [`PaddingMode`] specifies how to handle array boundaries.
 //!
@@ -30,8 +30,8 @@
 //! // Convolution kernel
 //! let kernel = array![[1, 1], [1, 1]];
 //!
-//! // Perform standard convolution with "same" output size and zero padding
-//! let output = input.conv(
+//! // Perform standard cross-correlation with "same" output size and zero padding
+//! let output = input.xcorr(
 //!     &kernel,
 //!     ConvMode::Same,
 //!     PaddingMode::Zeros,
@@ -40,7 +40,7 @@
 //! println!("Standard Convolution Output:\n{:?}", output);
 //!
 //! // Perform FFT-accelerated convolution with "same" output size and zero padding
-//! let output_fft = input.map(|&x| x as f32).conv_fft(
+//! let output_fft = input.map(|&x| x as f32).xcorr_fft(
 //!     &kernel.map(|&x| x as f32),
 //!     ConvMode::Same,
 //!     PaddingMode::Zeros,
@@ -51,8 +51,8 @@
 //!
 //! # Choosing a convolution method
 //!
-//!  * Use [`ConvExt::conv`] for standard convolution
-//!  * Use [`ConvFFTExt::conv_fft`] for FFT accelerated convolution.
+//!  * Use [`ConvExt::xcorr`] for standard convolution
+//!  * Use [`ConvFFTExt::xcorr_fft`] for FFT accelerated convolution.
 //!    FFT accelerated convolution is generally faster for larger kernels, but
 //!    standard convolution may be faster for smaller kernels.
 //!
